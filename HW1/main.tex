@@ -1,0 +1,787 @@
+\documentclass{article}
+
+% ==== RUSSIAN + XELATEX SETTINGS ====
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\setotherlanguage{english}
+
+\usepackage{fontspec}
+% Красивые русские шрифты
+\setmainfont{PT Serif}
+\setsansfont{PT Sans}
+\setmonofont{JetBrains Mono}
+
+% ==== PACKAGES ====
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{geometry}
+
+% ==== PAGE GEOMETRY ====
+\geometry{
+    a4paper,
+    top=1.8cm,
+    bottom=2cm,
+    left=2cm,
+    right=2cm
+}
+
+\linespread{1.12}
+\setlength\parindent{0pt}
+
+% ==== HOMEWORK INFORMATION ====
+\newcommand{\hmwkTitle}{Лабораторная работа №1}
+\newcommand{\hmwkDueDate}{Срок сдачи: 21 ноября 2025}
+\newcommand{\hmwkClass}{Статистика, байесовский вывод, линейные и «деревянные» модели}
+\newcommand{\hmwkClassTime}{}
+\newcommand{\hmwkClassInstructor}{Преподаватели: Бойцев Антон, Волчек Дмитрий}
+\newcommand{\hmwkAuthorName}{\textbf{Ластовецкий Дмитрий}}
+
+% ==== HEADER / FOOTER (Только автор + название лабы) ====
+\pagestyle{fancy}
+\fancyhf{} % очистить все поля
+
+\lhead{\hmwkAuthorName}
+\rhead{\hmwkTitle}
+\cfoot{\thepage}
+\lfoot{\lastxmark}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+% ==== HOMEWORK PROBLEM COUNTERS ====
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+
+\nobreak\extramarks{Задача \arabic{homeworkProblemCounter}}{}\nobreak{}
+
+\newcommand{\enterProblemHeader}[1]{
+    \nobreak\extramarks{}{Задача \arabic{#1} продолжается на следующей странице\ldots}\nobreak{}
+    \nobreak\extramarks{Задача \arabic{#1} (продолжение)}{Задача \arabic{#1} продолжается на следующей странице\ldots}\nobreak{}
+}
+
+\newcommand{\exitProblemHeader}[1]{
+    \nobreak\extramarks{Задача \arabic{#1} (продолжение)}{Задача \arabic{#1} продолжается\ldots}\nobreak{}
+    \stepcounter{#1}
+    \nobreak\extramarks{Задача \arabic{#1}}{}\nobreak{}
+}
+
+\newenvironment{homeworkProblem}[1][-1]{
+    \ifnum#1>0
+        \setcounter{homeworkProblemCounter}{#1}
+    \fi
+    \section{Задача \arabic{homeworkProblemCounter}}
+    \setcounter{partCounter}{1}
+    \enterProblemHeader{homeworkProblemCounter}
+}{
+    \exitProblemHeader{homeworkProblemCounter}
+}
+
+\renewcommand{\part}[1]{\textbf{\large Часть \Alph{partCounter}}%
+\stepcounter{partCounter}\\}
+
+% ==== MATH HELPERS ====
+\newcommand{\solution}{\vspace{3mm}\textbf{\large Решение:}\\[2mm]}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+
+% ==== DOCUMENT ====
+\begin{document}
+
+% ----- КРАСИВЫЙ ТИТУЛЬНИК -----
+\begin{titlepage}
+    \thispagestyle{empty}
+    \vspace*{\fill}
+    \begin{center}
+        {\Large \hmwkClass}\\[0.6cm]
+        {\huge \textbf{\hmwkTitle}}\\[0.8cm]
+        {\large \hmwkDueDate}\\[0.4cm]
+        {\large \hmwkClassInstructor}\\[1.5cm]
+        {\large \hmwkAuthorName}
+    \end{center}
+    \vspace*{\fill}
+\end{titlepage}
+
+\setcounter{page}{2}
+
+% ---------------------------------------------------------
+% ---------------------- ЗАДАЧИ ---------------------------
+% ---------------------------------------------------------
+
+% === 1.1.1 ===
+\begin{homeworkProblem}
+Определить (с обоснованием), зависимы или независимы следующие события:
+\begin{enumerate}
+    \item[(a)] Несовместные события;
+    \item[(b)] События, образующие $\sigma$-алгебру $\Sigma$ в пространстве $(\Omega,\Sigma,P)$;
+    \item[(c)] События, имеющие одинаковую вероятность.
+\end{enumerate}
+
+\solution
+\begin{enumerate}
+    \item[(a)] Без ограничения общности возьмем два события и обозначим их за $A, B$. Так как события независимы, то по определению $A \cap B = \emptyset$, следовательно $P(A \cap B) = P(\emptyset) = 0$. По определению события независимы, если $P(A \cap B) = P(A) \cdot P(B)$. Далее, 
+    \begin{itemize}
+        \item если $P(A) = 0$ или $P(B) = 0$, то требуемое равенство выполняется и \textbf{события независимы}
+        \item если же одновременно $P(A) > 0$ и $P(B) > 0$, то $P(A) \cdot P(B) > 0 = P(A \cap B)$ \textbf{и события не независимы}
+    \end{itemize}
+    Аналогично обобщается для большего количества событий. Если вероятность хотя бы одного из событий равна $0$, то требуемое равенство выполняется и события в совокупности независимы (что влечет попарную независимость). Если же вероятность всех событий положительна, то события в совокупности не независимы. 
+    \item[(b)] Снова возьмем события $A, B$. Если на них образована сигма-алгебра, то независимо от взаимного положения $A, B$ (вложенности, отсутствия пересечений) все область $\Omega$ разбивается на $$E_1 = A \cap B, E_2 = A^c \cap B, E_3 = A \cap B^c, E_4 = A^c \cap B^c$$ и каждое из событий $E_1, E_2, E_3, E_4$ входит в сигма-алгебру как комбинация дополнений и объединений изначальных событий. Теперь заметим, что если $A, B$ независимы, то $$P(E_1) = P(A \cap B) \textbf{=}  P(A) \cdot P(B) $$ при этом $$P(A) = P(E_1 \cup E_3) = P(E_1) + P(E_3)$$ так как $E_1 \cap E_3 = \emptyset$. аналогично $$P(B) = P(E_1 \cup E_2) = P(E_1) + P(E_2)$$ и $$P(A) \cdot P(B) = (P(E_1) + P(E_3)) \cdot (P(E_1) + P(E_2)) = P^2(E_1) + P(E_1) P(E_2) + P(E_1) P(E_3) + P(E_2) P(E_3) $$ 
+    для краткости обозначим $P(E_i) = p_i$. тогда события независимы если $$p_1 = p^2_1 + p_1p_2 + p_1p_3 + p_2p_3$$ $$p^2_1 + p_1p_2 + p_1p_3 + p_2p_3 - p_1 = 0 $$ $$p_1 ( p_1 + p_2 + p_3 - 1) + p_2p_3 = 0 $$ $$ p_1 p_4 = p_2p_3$$ $$P(A \cap B) \cdot P(A^c \cap B^c) = P(A^c \cap B) \cdot P(A \cap B^c)$$ То есть события $A, B$ \textbf{независимы если} $P(A \cap B) \cdot P(A^c \cap B^c) = P(A^c \cap B) \cdot P(A \cap B^c)$, \textbf{иначе не независимы}. 
+    \item[(с)] Боюсь, в данном случае не получится сделать вывод о зависимости или независимости двух событий. Обозначим $A, B, P(A) = P(B) = p$. События независимы если $P(A \cap B) = p^2$. Мы можем подобрать соответствующие примеры: 
+    \begin{itemize}
+        \item отсутствия независимости двух событий. Возьмем один бросок стандартного шестигранного кубика и рассмотрим события  $$A = \{ 1, 3, 5\}, B = \{1, 4, 5\}$$ Тогда $$P(A) = P(B) = \frac{1}{2}; P(A\cap B) = \frac{1}{6}$$
+        \item независимости двух событий. Возьмем два подряд бросания честной монетки и обозначим за $A$ выпадение орла в первом броске и за $B$  выпадение орла во втором броске. Тогда вероятности событий равны, и при этом $P(A \cap B) = P(A) \cdot P(B) = \frac{1}{4}$
+    \end{itemize}
+\end{enumerate}
+\end{homeworkProblem}
+
+% === 1.1.2 ===
+\begin{homeworkProblem}
+Опыт заключается в независимом подбрасывании двух симметричных
+монет. Рассматриваются следующие события:
+\begin{itemize}
+    \item A -- появление герба на первой монете;
+    \item B -- появление решки на первой монете;
+    \item C -- появление герба на второй монете;
+    \item D -- появление решки на второй монете;
+    \item E -- появление хотя бы одного герба;
+    \item F -- появление хотя бы одной решки;
+    \item G -- появление одного герба и одной решки;
+    \item H -- непоявление ни одного герба;
+    \item K -- появление двух гербов.
+
+\end{itemize}
+
+Определить, каким событиям этого списка равносильны следующие события:
+
+\begin{enumerate}
+\item[(a)] $A + C$
+\item[(b)] $AC$
+\item[(c)] $EF$
+\item[(d)] $G + E$
+\item[(e)] $GE$
+\item[(f)] $BD$
+\item[(g)] $E + K$
+\end{enumerate}
+
+\solution
+Рассмотрим пространство элементарных исходов
+$$\Omega = \{\text{ОО}, \text{ОР}, \text{РО}, \text{РР}\}$$
+
+
+Тогда события из условия можно записать так:
+$$
+\begin{aligned}
+A &= \{\text{ОО}, \text{ОР}\}, &&\text{(орёл на первой монете)}\\
+B &= \{\text{РО}, \text{РР}\}, &&\text{(решка на первой монете)}\\
+C &= \{\text{ОО}, \text{РО}\}, &&\text{(орёл на второй монете)}\\
+D &= \{\text{ОР}, \text{РР}\}, &&\text{(решка на второй монете)}\\
+E &= \{\text{ОО}, \text{ОР}, \text{РО}\}, &&\text{(хотя бы один орёл)}\\
+F &= \{\text{ОР}, \text{РО}, \text{РР}\}, &&\text{(хотя бы одна решка)}\\
+G &= \{\text{ОР}, \text{РО}\}, &&\text{(один орёл и одна решка)}\\
+H &= \{\text{РР}\}, &&\text{(нет орлов)}\\
+K &= \{\text{ОО}\}. &&\text{(два орла)}
+\end{aligned}
+$$
+откуда 
+
+\begin{itemize}
+    \item[(a)]
+    \[
+    A + C = A \cup C
+    = \{\text{ОО}, \text{ОР}\} \cup \{\text{ОО}, \text{РО}\}
+    = \{\text{ОО}, \text{ОР}, \text{РО}\} = E
+    \]
+
+    \item[(b)]
+    \[
+    AC = A \cap C
+    = \{\text{ОО}, \text{ОР}\} \cap \{\text{ОО}, \text{РО}\}
+    = \{\text{ОО}\} = K
+    \]
+
+    \item[(c)]
+    \[
+    EF = E \cap F
+    = \{\text{ОО}, \text{ОР}, \text{РО}\} \cap \{\text{ОР}, \text{РО}, \text{РР}\}
+    = \{\text{ОР}, \text{РО}\} = G
+    \]
+
+    \item[(d)]
+    \[
+    G + E = G \cup E = E
+    \quad(\text{так как } G \subset E)
+    \]
+
+    \item[(e)]
+    \[
+    GE = G \cap E = G
+    \]
+
+    \item[(f)]
+    \[
+    BD = B \cap D
+    = \{\text{РО}, \text{РР}\} \cap \{\text{ОР}, \text{РР}\}
+    = \{\text{РР}\} = H
+    \]
+
+    \item[(g)]
+    \[
+    E + K = E \cup K = E
+    \quad(\text{так как } K \subset E)
+    \]
+\end{itemize}
+
+\end{homeworkProblem}
+
+% === 1.1.3 ===
+\begin{homeworkProblem}
+Производится выстрел по вращающейся мишени, в которой закрашены два непересекающихся сектора по $20^\circ$ каждый. Найти вероятность попадания в закрашенную область.
+
+\solution
+Так как секторы не пересекаются, то закрашенный угол равен $40^\circ$. Площадь сектора линейно зависит от угла, следовательно, закрашена $\frac{1}{9}$ площади мишени. Так как вероятность попадания распределена равномерно по площади мишени, \textbf{она равна $\frac{1}{9}$}
+\end{homeworkProblem}
+
+% === 1.1.4 ===
+\begin{homeworkProblem}
+Два парохода должны подойти к одному и тому же причалу независимо друг от друга и равновозможно в течение суток. Определить вероятность того, что одному из них придется ожидать освобождения причала,
+если время стоянки первого парохода -- 1 час, а второго -- 2 часа.
+
+\solution
+Обозначим за $t_1$ время прихода первого парохода к причалу, за $t_2$ время прихода второго парохода к причалу. Тогда кому-то придется ждать освобождения причала, если $[t_1, t_1 + 1] \cap [t_2, t_2 + 2]$. Рассмотрим полное дополнение этого события (что значит, что никакой пароход не ждал причал). Его можно задать как объединение событий $t_1 + 1 \leq t_2$ и $t_2 + 2 \leq t_1$. Приведем иллюстрацию: 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\textwidth]{output.png}
+    \caption{Области ожидания и отсутствия ожидания причала}
+\end{figure}
+Соответственно, никто никого не ждет с вероятностью, равной отношению соответствующей синей области к площади квадрата, то есть: $$P((t_1 + 1 \leq t_2) \cup (t_2 + 2 \leq t_1)) = \frac{\frac{23^2}{2} + \frac{22 ^2}{2}}{24^2} = \frac{1013}{1152}$$ Следовательно, искомая нами вероятность ожидания равна $$P([t_1, t_1 + 1] \cap [t_2, t_2 + 2]) = 1 - \frac{1013}{1152} = \frac{139}{1152} \approx 0.1206597$$
+
+\end{homeworkProblem}
+
+% === 1.1.5 ===
+\begin{homeworkProblem}
+Самолет, по которому ведется стрельба, состоит из трех различных по
+уязвимости частей:
+\begin{enumerate}
+\item[(a)] Кабина летчика и двигатель
+\item[(b)] Топливные баки
+\item[(c)] Планер
+\end{enumerate}
+Для поражения самолета достаточно либо одного попадания в первую
+часть, либо двух попаданий во вторую, либо трех в третью. При попадании в самолет одного снаряда, снаряд с вероятностью $p_1$ попадает в
+первую часть, с вероятностью $p_2$ — во вторую, с вероятностью $p_3$ -- в
+третью. Попавшие снаряды распределяются по частям независимо друг
+от друга.
+Известно, что в самолет попало $m$ снарядов. Найти условную вероятность $P(A|m)$ события $A$ -- "Самолет поражен" – при $m = 1, 2, 3, 4$
+
+\solution
+\begin{enumerate}
+\item При $m = 1$ самолёт поражён тогда и только тогда, когда выстрел пришёлся в первую часть. Следовательно,
+\[
+P(A \mid m=1) = p_1.
+\]
+
+\item При $m = 2$ самолёт поражён тогда и только тогда, когда либо хотя бы один выстрел пришёлся в первую часть ($A_1$), либо оба выстрела попали во вторую часть ($A_2$).
+
+Вероятность первого события найдём через дополнение:
+\[
+P(A_1) = 1 - P(A_1^c) = 1 - (1 - p_1)^2.
+\]
+Вероятность второго:
+\[
+P(A_2) = p_2^2.
+\]
+при этом
+\[
+A_1 \cap A_2 = \emptyset.
+\]
+Тогда
+\[
+P(A \mid m=2) = P(A_1) + P(A_2)
+= 1 - (1 - p_1)^2 + p_2^2.
+\]
+
+\item При $m = 3$ удобнее сразу смотреть на дополнение. Самолёт \emph{не} поражён, если одновременно:
+\begin{itemize}
+  \item нет ни одного попадания в первую часть ($N_1 = 0$);
+  \item во вторую попало строго меньше двух попаданий ($N_2 \le 1$);
+  \item в третью попало строго меньше трёх попаданий ($N_3 \le 2$),
+\end{itemize}
+где $N_i$ — число попаданий в $i$-ю часть и $N_1 + N_2 + N_3 = 3$.
+
+Из всех троек $(N_1,N_2,N_3)$ с суммой $3$ этим условиям удовлетворяет только
+\[
+(N_1,N_2,N_3) = (0,1,2),
+\]
+то есть самолёт не поражён только в случае когда один снаряд попал во вторую часть и два — в третью.
+
+Тогда
+\[
+P(A^c \mid m=3)
+= P(N_1=0, N_2=1, N_3=2)
+= \frac{3!}{0!\,1!\,2!}\,p_1^0 p_2^1 p_3^2
+= 3 p_2 p_3^2,
+\]
+следовательно
+\[
+P(A \mid m=3)
+= 1 - P(A^c \mid m=3)
+= 1 - 3 p_2 p_3^2.
+\]
+
+\item При $m = 4$ снова смотрим на дополнение. Чтобы самолёт не был поражён, нужно одновременно:
+\[
+N_1 = 0,\quad N_2 \le 1,\quad N_3 \le 2,\quad N_1 + N_2 + N_3 = 4.
+\]
+Но при $N_2 \le 1$ и $N_3 \le 2$ максимум возможная сумма $N_2 + N_3$ равна $1 + 2 = 3 < 4$, то есть таких конфигураций просто не существует. Значит
+\[
+P(A^c \mid m=4) = 0,\qquad
+P(A \mid m=4) = 1.
+\]
+\end{enumerate}
+
+
+\end{homeworkProblem}
+
+% ========== 1.2 ==========
+
+% === 1.2.1 ===
+\begin{homeworkProblem}
+Проверить, является ли
+\[
+f_\xi(x,y)=\frac{e^{-2|y|}}{\pi(1+x^2)}
+\]
+плотностью распределения случайного вектора.
+
+\solution
+Функция являетcz плотностью распределения случайного вектора, если она не отрицательна по $x, y$ и если ее интеграл на $\mathbb{R}^2$ равен 1. Первое очевидно по форме функции. Найдем интеграл $$
+\iint\limits_{\mathbb{R}^2} f_{\xi}(x,y)\,dx\,dy
+= \int_{-\infty}^{\infty} \int_{-\infty}^{\infty}
+\frac{e^{-2|y|}}{\pi\bigl(1 + x^{2}\bigr)} \, dx \, dy.
+= \int_{-\infty}^{\infty} \frac{1}{{\pi\bigl(1 + x^{2}\bigr)} } dx \int_{-\infty}^{\infty} e^{-2|y|} dy$$
+Сразу заметим что левый интеграл это интеграл функции плотности стандартного распределения Коши, следовательно, он равен 1. Возьмем второй интеграл: $$\int_{-\infty}^{\infty} e^{-2|y|} dy = 2 \int_{0}^{\infty} e^{-2|y|} dy = 2 \int_{0}^{\infty} e^{-2y} dy = 2 \frac{e^{-2y}}{-2} \vert_0^\infty = -e^{-2y} \vert_0^\infty = 1$$
+
+Значит, исходный интеграл равен 1. Следовательно, эта функция является плотностью распределения случайного вектора.
+
+\end{homeworkProblem}
+
+% === 1.2.2 ===
+\begin{homeworkProblem}
+Совместное распределение случайных величин $\xi$ и $\eta$ задано следующей таблицей:
+\[
+\begin{array}{c|ccc}
+  \xi \backslash \eta & -1 & 0 & 1 \\ \hline
+  -1 & \dfrac{1}{8} & \dfrac{1}{12} & \dfrac{7}{24} \\
+  1  & \dfrac{1}{3} & \dfrac{1}{6}  & 0
+\end{array}
+\]
+
+\begin{enumerate}
+  \item[(a)] Найти маргинальные распределения $\xi$ и $\eta$.
+  \item[(b)] Вычислить математическое ожидание, ковариационную и корреляционную матрицы вектора $(\xi,\eta)$.
+  \item[(c)] Исследовать $\xi$ и $\eta$ на независимость и некоррелированность.
+\end{enumerate}
+
+
+\solution
+\begin{enumerate}
+    \item[(a)] для $\xi$:
+        \[
+        \begin{array}{c|c}
+          \xi&   \\ \hline
+          -1 & 0.5 \\
+          1  & 0.5 
+        \end{array}
+        \]
+        для $\eta$:
+        \[
+        \begin{array}{c|ccc}
+          \eta & -1 & 0 & 1 \\ \hline
+          & \dfrac{11}{24} & \dfrac{1}{4} & \dfrac{7}{24} 
+        \end{array}
+        \]
+    \item[(b)] $\E (\xi,\eta) =  (\E\xi,\E\eta) = (0, -\dfrac{1}{6})$
+
+Далее вычислим дисперсии. Сначала вторые моменты:
+\[
+\mathbb{E}\xi^{2}
+= (-1)^{2}\cdot\frac12 + 1^{2}\cdot\frac12
+= \frac12 + \frac12 = 1,
+\]
+\[
+\mathbb{E}\eta^{2}
+= (-1)^{2}\cdot\frac{11}{24} + 0^{2}\cdot\frac14 + 1^{2}\cdot\frac{7}{24}
+= \frac{11}{24} + \frac{7}{24} = \frac{18}{24} = \frac34.
+\]
+Тогда
+\[
+\operatorname{Var}(\xi)
+= \mathbb{E}\xi^{2} - (\mathbb{E}\xi)^{2}
+= 1 - 0^{2} = 1,
+\]
+\[
+\operatorname{Var}(\eta)
+= \mathbb{E}\eta^{2} - (\mathbb{E}\eta)^{2}
+= \frac34 - \left(-\frac{1}{6}\right)^{2}
+= \frac34 - \frac{1}{36}
+= \frac{27-1}{36}
+= \frac{13}{18}.
+\]
+
+Теперь найдём смешанный момент $\mathbb{E}(\xi\eta)$:
+
+\[
+\mathbb{E}(\xi\eta)
+= (-1)(-1)\cdot\frac{1}{8}
++ (-1)\cdot 0\cdot\frac{1}{12}
++ (-1)\cdot 1\cdot\frac{7}{24}
++ 1\cdot(-1)\cdot\frac{1}{3}
++ 1\cdot 0\cdot\frac{1}{6}
++ 1\cdot 1\cdot 0
+\]
+\[
+= \frac{1}{8} - \frac{7}{24} - \frac{1}{3}
+= \frac{3}{24} - \frac{7}{24} - \frac{8}{24}
+= -\frac{12}{24} = -\frac{1}{2}
+\]
+
+Отсюда ковариация:
+\[
+\operatorname{Cov}(\xi,\eta)
+= \mathbb{E}(\xi\eta) - \mathbb{E}\xi\,\mathbb{E}\eta
+= -\frac{1}{2} - 0\cdot\left(-\frac{1}{6}\right)
+= -\frac{1}{2}
+\]
+
+Ковариационная матрица вектора $(\xi,\eta)$:
+\[
+\mathbf{K} =
+\begin{pmatrix}
+\operatorname{Var}(\xi) & \operatorname{Cov}(\xi,\eta) \\[4pt]
+\operatorname{Cov}(\xi,\eta) & \operatorname{Var}(\eta)
+\end{pmatrix}
+=
+\begin{pmatrix}
+1 & -\dfrac{1}{2} \\[4pt]
+-\dfrac{1}{2} & \dfrac{13}{18}
+\end{pmatrix}
+\]
+
+Коэффициент корреляции:
+\[
+\rho_{\xi,\eta}
+= \frac{\operatorname{Cov}(\xi,\eta)}
+{\sqrt{\operatorname{Var}(\xi)\operatorname{Var}(\eta)}}
+= \frac{-\frac{1}{2}}{\sqrt{1\cdot \frac{13}{18}}}
+= -\frac{1}{2}\sqrt{\frac{18}{13}}
+= -\frac{3\sqrt{2}}{2\sqrt{13}}
+\]
+Тогда корреляционная матрица:
+\[
+\mathbf{R} =
+\begin{pmatrix}
+1 & \rho_{\xi,\eta} \\[4pt]
+\rho_{\xi,\eta} & 1
+\end{pmatrix}
+=
+\begin{pmatrix}
+1 & -\dfrac{3\sqrt{2}}{2\sqrt{13}} \\[4pt]
+-\dfrac{3\sqrt{2}}{2\sqrt{13}} & 1
+\end{pmatrix}
+\]
+
+\item[(c)]
+\textbf{Независимость.}
+Если бы $\xi$ и $\eta$ были независимы, должно выполняться
+\[
+P(\xi=x,\eta=y) = P(\xi=x)\,P(\eta=y)
+\quad\text{для всех }x,y.
+\]
+Проверим хотя бы одну пару, например $(\xi,\eta)=(-1,-1)$:
+\[
+P(\xi=-1,\eta=-1) = \frac{1}{8},
+\]
+\[
+P(\xi=-1)P(\eta=-1)
+= \frac{1}{2}\cdot\frac{11}{24}
+= \frac{11}{48}.
+\]
+Так как
+\[
+\frac{1}{8} = \frac{6}{48} \ne \frac{11}{48},
+\]
+то условие независимости не выполняется. Следовательно, $\xi$ и $\eta$ \textbf{не независимы}.
+
+\medskip
+\textbf{Некоррелированность.}
+Случайные величины некоррелированы, если
+\[
+\operatorname{Cov}(\xi,\eta)=0.
+\]
+но
+\[
+\operatorname{Cov}(\xi,\eta) = -\frac{1}{2} \ne 0,
+\]
+значит, $\xi$ и $\eta$ \textbf{коррелированы} 
+
+\end{enumerate}
+\end{homeworkProblem}
+
+% === 1.2.3 ===
+
+\begin{homeworkProblem}
+Пусть имеются два одинаковых тетраэдра с числами $1,2,3,4$ на гранях. 
+Подкидываем оба и смотрим на выпавшие числа $\xi_1$ и $\xi_2$. Зададим следующие
+случайные величины:
+\[
+    \varphi_1 = \xi_1 + \xi_2, 
+    \qquad
+    \varphi_2 =
+    \begin{cases}
+        1, & (\xi_1\!:\!\xi_2)\cup(\xi_2\!:\!\xi_1),\\[2pt]
+        0, & \text{иначе},
+    \end{cases}
+\]
+
+\begin{enumerate}
+  \item[(a)] Составить таблицу совместного распределения $\varphi_1$ и $\varphi_2$.
+  \item[(b)] Найти маргинальные распределения $\varphi_1$ и $\varphi_2$.
+  \item[(c)] Вычислить математическое ожидание, ковариационную и корреляционную матрицы вектора $(\varphi_1,\varphi_2)$.
+  \item[(d)] Исследовать $\varphi_1$ и $\varphi_2$ на независимость и некоррелированность.
+\end{enumerate}
+
+\solution
+
+Всего исходов $(\xi_1,\xi_2)$ $16$, все равновозможны c вероятностью $1/16$.
+
+\begin{enumerate}
+\item[(a)] Выпишем значения $(\varphi_1,\varphi_2)$:
+
+\[
+\begin{array}{c|cccc}
+\xi_1\backslash\xi_2 & 1 & 2 & 3 & 4 \\ \hline
+1 & (2,1) & (3,1) & (4,1) & (5,1)\\
+2 & (3,1) & (4,1) & (5,0) & (6,1)\\
+3 & (4,1) & (5,0) & (6,1) & (7,0)\\
+4 & (5,1) & (6,1) & (7,0) & (8,1)
+\end{array}
+\]
+
+По этим данным получаем совместное распределение $(\varphi_1,\varphi_2)$:
+
+\[
+\begin{array}{c|cc}
+\varphi_1 \backslash \varphi_2 & 0 & 1 \\ \hline
+2 & 0 & \dfrac{1}{16} \\
+3 & 0 & \dfrac{1}{8} \\
+4 & 0 & \dfrac{3}{16} \\
+5 & \dfrac{1}{8} & \dfrac{1}{8} \\
+6 & 0 & \dfrac{3}{16} \\
+7 & \dfrac{1}{8} & 0 \\
+8 & 0 & \dfrac{1}{16}
+\end{array}
+\]
+
+\item[(b)] Маргинальные распределения:
+
+\[
+P(\varphi_1 = 2)=\frac{1}{16},\quad
+P(\varphi_1 = 3)=\frac{1}{8},\quad
+P(\varphi_1 = 4)=\frac{3}{16},\quad
+P(\varphi_1 = 5)=\frac{1}{4},
+\]
+\[
+P(\varphi_1 = 6)=\frac{3}{16},\quad
+P(\varphi_1 = 7)=\frac{1}{8},\quad
+P(\varphi_1 = 8)=\frac{1}{16}.
+\]
+
+Для $\varphi_2$:
+\[
+P(\varphi_2 = 1) = \frac{3}{4}, \qquad
+P(\varphi_2 = 0) = \frac{1}{4}.
+\]
+
+\item[(c)] Вычислим математические ожидания и дисперсии.
+
+\[
+\E\varphi_1 = \sum_{k=2}^{8} k\,P(\varphi_1=k)
+= 2\cdot\frac1{16}
++ 3\cdot\frac1{8}
++ 4\cdot\frac3{16}
++ 5\cdot\frac14
++ 6\cdot\frac3{16}
++ 7\cdot\frac1{8}
++ 8\cdot\frac1{16}
+= 5.
+\]
+
+\[
+\E\varphi_1^2 = \sum_{k=2}^{8} k^2\,P(\varphi_1=k)
+= \frac{55}{2},
+\qquad
+\Var(\varphi_1) = \E\varphi_1^2 - (\E\varphi_1)^2
+= \frac{55}{2} - 25 = \frac{5}{2}.
+\]
+
+Для $\varphi_2$:
+\[
+\E\varphi_2 = 0\cdot\frac14 + 1\cdot\frac34 = \frac34,
+\quad
+\E\varphi_2^2 = \frac34,
+\quad
+\Var(\varphi_2) = \E\varphi_2^2 - (\E\varphi_2)^2
+= \frac34 - \left(\frac34\right)^2 = \frac{3}{16}.
+\]
+
+Теперь найдём $\E(\varphi_1\varphi_2)$:
+\[
+\E(\varphi_1\varphi_2)
+= \sum_{k} \sum_{b} k b\, P(\varphi_1=k,\varphi_2=b)
+= \sum_{k} k\cdot 1 \cdot P(\varphi_1=k,\varphi_2=1)
+= 2\cdot\frac1{16}
++ 3\cdot\frac1{8}
++ 4\cdot\frac3{16}
++ 5\cdot\frac1{8}
++ 6\cdot\frac3{16}
++ 8\cdot\frac1{16}
+= \frac{7}{2}.
+\]
+
+Ковариация:
+\[
+\Cov(\varphi_1,\varphi_2)
+= \E(\varphi_1\varphi_2) - \E\varphi_1\,\E\varphi_2
+= \frac{7}{2} - 5\cdot\frac34
+= \frac{7}{2} - \frac{15}{4}
+= -\frac{1}{4}.
+\]
+
+Ковариационная матрица вектора $(\varphi_1,\varphi_2)$:
+\[
+\mathbf{K} =
+\begin{pmatrix}
+\Var(\varphi_1) & \Cov(\varphi_1,\varphi_2)\\[4pt]
+\Cov(\varphi_1,\varphi_2) & \Var(\varphi_2)
+\end{pmatrix}
+=
+\begin{pmatrix}
+\frac{5}{2} & -\frac{1}{4}\\[4pt]
+-\frac{1}{4} & \frac{3}{16}
+\end{pmatrix}.
+\]
+
+Коэффициент корреляции:
+\[
+\rho_{\varphi_1,\varphi_2}
+= \frac{\Cov(\varphi_1,\varphi_2)}
+{\sqrt{\Var(\varphi_1)\Var(\varphi_2)}}
+= \frac{-\frac{1}{4}}{\sqrt{\frac{5}{2}\cdot\frac{3}{16}}}
+= -\sqrt{\frac{2}{15}}.
+\]
+
+Тогда корреляционная матрица:
+\[
+\mathbf{R} =
+\begin{pmatrix}
+1 & -\sqrt{\dfrac{2}{15}}\\[4pt]
+-\sqrt{\dfrac{2}{15}} & 1
+\end{pmatrix}.
+\]
+
+\item[(d)] \textbf{Независимость.}
+Если бы $\varphi_1$ и $\varphi_2$ были независимы, то
+\[
+P(\varphi_1=k,\varphi_2=b) = P(\varphi_1=k)\,P(\varphi_2=b)
+\quad\text{для всех }k,b.
+\]
+Проверим, например, при $k=7$, $b=1$:
+\[
+P(\varphi_1=7,\varphi_2=1) = 0,
+\]
+в то время как
+\[
+P(\varphi_1=7)\,P(\varphi_2=1)
+= \frac{1}{8}\cdot\frac{3}{4}
+= \frac{3}{32} > 0.
+\]
+$\varphi_1$ и $\varphi_2$ \textbf{не независимы}
+
+\medskip
+\textbf{Некоррелированность.}
+Поскольку
+\[
+\Cov(\varphi_1,\varphi_2) = -\frac{1}{4} \ne 0,
+\]
+случайные величины $\varphi_1$ и $\varphi_2$ \textbf{коррелированы}
+\end{enumerate}
+
+\end{homeworkProblem}
+
+
+% === 1.2.5 ===
+\begin{homeworkProblem}
+Найти плотность распределения суммы двух независимых случайных величин
+$\xi$ и $\eta$, если $\xi \sim \mathrm{Exp}_2$ и $\eta \sim U_{0,1}$.
+
+\solution
+Плотности исходных величин:
+\[
+f_\xi(x)=
+\begin{cases}
+2e^{-2x}, & x\ge 0,\\
+0, & x<0,
+\end{cases}
+\qquad
+f_\eta(y)=
+\begin{cases}
+1, & 0\le y\le 1,\\
+0, & \text{иначе}.
+\end{cases}
+\]
+
+Рассматриваем сумму $Z=\xi+\eta$. Так как величины независимы, используем свёртку:
+\[
+f_Z(z)=\int_{-\infty}^{\infty} f_\xi(z-y)f_\eta(y)\,dy.
+\]
+
+Одновременно должны выполняться условия $0\le y\le 1$ и $z-y\ge 0$, так что
+интегрирование идёт по $y\in[0,\min\{1,z\}]$. Тогда рассмотрим по случаям : 
+\begin{enumerate}
+    \item[] {$z<0$} Область пуста, плотность равна нулю:
+\[
+f_Z(z)=0.
+\]
+
+    \item[] {$0\le z\le 1$} Тогда интегрируем от $0$ до $z$:
+\[
+f_Z(z)=\int_0^z 2e^{-2(z-y)}\,dy
+=1-e^{-2z}.
+\]
+
+    \item[] {$z\ge 1$} Тогда ограничение даёт интеграл от $0$ до $1$:
+\[
+f_Z(z)=\int_0^1 2e^{-2(z-y)}\,dy
+=(e^{2}-1)e^{-2z}.
+\]
+\end{enumerate}
+    Итого 
+\[
+f_Z(z)=
+\begin{cases}
+0, & z<0,\\[4pt]
+1-e^{-2z}, & 0\le z\le 1,\\[4pt]
+(e^{2}-1)e^{-2z}, & z\ge 1.
+\end{cases}
+\]
+\end{homeworkProblem}
+
+\end{document}
+
